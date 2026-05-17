@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { login } from './api/auth'
 import { clearSession, getSession, saveSession } from './lib/session'
 import FileUploadTab from './components/FileUploadTab'
+import StorageTab from './components/StorageTab'
 import './App.css'
 
 function App() {
@@ -77,11 +78,20 @@ function App() {
                 >
                   File upload
                 </button>
+                <button
+                  type="button"
+                  className={`welcome__tab${activeTab === 'storage' ? ' welcome__tab--active' : ''}`}
+                  onClick={() => setActiveTab('storage')}
+                >
+                  Storage
+                </button>
               </nav>
             ) : null}
 
             {activeTab === 'upload' && isAdmin ? (
               <FileUploadTab />
+            ) : activeTab === 'storage' && isAdmin ? (
+              <StorageTab />
             ) : (
               <>
                 <h1 id="welcome-heading" className="welcome__title">

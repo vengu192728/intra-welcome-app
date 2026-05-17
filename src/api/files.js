@@ -57,3 +57,17 @@ export async function listUploadedFiles() {
 
   return data.files ?? []
 }
+
+export async function fetchDiskSpace() {
+  const response = await fetch(`${API_BASE}/api/files/disk-space`, {
+    headers: adminHeaders(),
+  })
+
+  const data = await response.json().catch(() => ({}))
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Could not load disk space')
+  }
+
+  return data
+}
