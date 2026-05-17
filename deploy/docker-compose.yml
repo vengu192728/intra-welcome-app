@@ -39,7 +39,7 @@ services:
     container_name: intra-welcome
     restart: unless-stopped
     ports:
-      - "${INTRANET_PORT:-8080}:80"
+      - "${INTRANET_PORT:-3000}:80"
     depends_on:
       intra-authenticator:
         condition: service_healthy
