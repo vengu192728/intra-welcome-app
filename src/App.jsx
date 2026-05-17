@@ -1,0 +1,129 @@
+import { useState } from 'react'
+import { login } from './api/auth'
+import { clearSession, getSession, saveSession } from './lib/session'
+import './App.css'
+
+function App() {
+  const [session, setSession] = useState(() => getSession())
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  async function handleSubmit(event) {
+    event.preventDefault()
+    setError('')
+    setLoading(true)
+
+    try {
+      const result = await login(username.trim(), password)
+      const nextSession = { username: result.username, role: result.role }
+      saveSession(nextSession)
+      setSession(nextSession)
+      setPassword('')
+    } catch (err) {
+      setError(err.message || 'Sign in failed. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  function handleSignOut() {
+    clearSession()
+    setSession(null)
+    setUsername('')
+    setPassword('')
+    setError('')
+  }
+
+  return (
+    <main className="welcome">
+      <div className="welcome__card" aria-labelledby="welcome-heading">
+        <div className="welcome__icon" aria-hidden="true">
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="8" y="16" width="48" height="36" rx="4" stroke="currentColor" strokeWidth="2.5" />
+            <path d="M8 24h48" stroke="currentColor" strokeWidth="2.5" />
+            <circle cx="16" cy="20" r="2" fill="currentColor" />
+            <circle cx="24" cy="20" r="2" fill="currentColor" />
+            <circle cx="32" cy="20" r="2" fill="currentColor" />
+          </svg>
+        </div>
+
+        {session ? (
+          <>
+            <p className="welcome__badge" data-role={session.role}>
+              {session.role}
+            </p>
+            <h1 id="welcome-heading" className="welcome__title">
+              Welcome, {session.username}
+            </h1>
+            <p className="welcome__subtitle">
+              You are signed in to the intranet server
+              {session.role === 'admin' ? ' with administrator access' : ''}.
+            </p>
+            <button type="button" className="welcome__button welcome__button--secondary" onClick={handleSignOut}>
+              Sign out
+            </button>
+          </>
+        ) : (
+          <>
+            <h1 id="welcome-heading" className="welcome__title">
+              Welcome to my intranet server
+            </h1>
+            <p className="welcome__subtitle">
+              Your internal network is ready. Sign in to access shared resources and tools.
+            </p>
+
+            <form className="welcome__form" onSubmit={handleSubmit} noValidate>
+              <div className="welcome__field">
+                <label className="welcome__label" htmlFor="username">
+                  Username
+                </label>
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  className="welcome__input"
+                  autoComplete="username"
+                  value={username}
+                  onChange={(event) => setUsername(event.target.value)}
+                  disabled={loading}
+                  required
+                />
+              </div>
+
+              <div className="welcome__field">
+                <label className="welcome__label" htmlFor="password">
+                  Password
+                </label>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  className="welcome__input"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  disabled={loading}
+                  required
+                />
+              </div>
+
+              {error ? (
+                <p className="welcome__error" role="alert">
+                  {error}
+                </p>
+              ) : null}
+
+              <button type="submit" className="welcome__button" disabled={loading}>
+                {loading ? 'Signing in…' : 'Sign in'}
+              </button>
+            </form>
+          </>
+        )}
+      </div>
+    </main>
+  )
+}
+
+export default App
