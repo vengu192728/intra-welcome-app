@@ -55,11 +55,12 @@ function App() {
               {session.role}
             </p>
             <h1 id="welcome-heading" className="welcome__title">
-              Welcome, {session.username}
+              Hello, {session.username}
             </h1>
             <p className="welcome__subtitle">
-              You are signed in to the intranet server
-              {session.role === 'admin' ? ' with administrator access' : ''}.
+              {session.role === 'admin'
+                ? 'You have administrator access to the intranet.'
+                : 'You are signed in. Internal resources and services are now available.'}
             </p>
             <button type="button" className="welcome__button welcome__button--secondary" onClick={handleSignOut}>
               Sign out
@@ -68,10 +69,10 @@ function App() {
         ) : (
           <>
             <h1 id="welcome-heading" className="welcome__title">
-              Welcome to my intranet server
+              Welcome to the intranet
             </h1>
             <p className="welcome__subtitle">
-              Your internal network is ready. Sign in to access shared resources and tools.
+              Sign in with your username and password to continue.
             </p>
 
             <form className="welcome__form" onSubmit={handleSubmit} noValidate>
