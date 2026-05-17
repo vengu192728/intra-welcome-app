@@ -1,14 +1,18 @@
 import { useState } from 'react'
 import { login } from './api/auth'
 import { clearSession, getSession, saveSession } from './lib/session'
+import FileUploadTab from './components/FileUploadTab'
 import './App.css'
 
 function App() {
   const [session, setSession] = useState(() => getSession())
+  const [activeTab, setActiveTab] = useState('home')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+
+  const isAdmin = session?.role === 'admin'
 
   async function handleSubmit(event) {
     event.preventDefault()
@@ -20,6 +24,7 @@ function App() {
       const nextSession = { username: result.username, role: result.role }
       saveSession(nextSession)
       setSession(nextSession)
+      setActiveTab('home')
       setPassword('')
     } catch (err) {
       setError(err.message || 'Sign in failed. Please try again.')
@@ -31,6 +36,7 @@ function App() {
   function handleSignOut() {
     clearSession()
     setSession(null)
+    setActiveTab('home')
     setUsername('')
     setPassword('')
     setError('')
@@ -54,14 +60,41 @@ function App() {
             <p className="welcome__badge" data-role={session.role}>
               {session.role}
             </p>
-            <h1 id="welcome-heading" className="welcome__title">
-              Hello, {session.username}
-            </h1>
-            <p className="welcome__subtitle">
-              {session.role === 'admin'
-                ? 'You have administrator access to the intranet.'
-                : 'You are signed in. Internal resources and services are now available.'}
-            </p>
+
+            {isAdmin ? (
+              <nav className="welcome__tabs" aria-label="Main navigation">
+                <button
+                  type="button"
+                  className={`welcome__tab${activeTab === 'home' ? ' welcome__tab--active' : ''}`}
+                  onClick={() => setActiveTab('home')}
+                >
+                  Home
+                </button>
+                <button
+                  type="button"
+                  className={`welcome__tab${activeTab === 'upload' ? ' welcome__tab--active' : ''}`}
+                  onClick={() => setActiveTab('upload')}
+                >
+                  File upload
+                </button>
+              </nav>
+            ) : null}
+
+            {activeTab === 'upload' && isAdmin ? (
+              <FileUploadTab />
+            ) : (
+              <>
+                <h1 id="welcome-heading" className="welcome__title">
+                  Hello, {session.username}
+                </h1>
+                <p className="welcome__subtitle">
+                  {session.role === 'admin'
+                    ? 'You have administrator access to the intranet.'
+                    : 'You are signed in. Internal resources and services are now available.'}
+                </p>
+              </>
+            )}
+
             <button type="button" className="welcome__button welcome__button--secondary" onClick={handleSignOut}>
               Sign out
             </button>

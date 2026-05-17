@@ -191,6 +191,176 @@
   }
 }
 
+.welcome__tabs {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.welcome__tab {
+  padding: 0.5rem 1rem;
+  font: inherit;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.welcome__tab:hover {
+  color: var(--text-heading);
+  border-color: var(--accent);
+}
+
+.welcome__tab--active {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.upload-tab {
+  text-align: left;
+  max-width: 28rem;
+  margin-inline: auto;
+}
+
+.upload-tab__heading {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  color: var(--text-heading);
+  text-align: center;
+}
+
+.upload-tab__hint {
+  margin: 0 0 1.25rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.upload-tab__form {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.upload-tab__picker {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 2px dashed var(--border);
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.upload-tab__picker:hover {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+}
+
+.upload-tab__picker input[type='file'] {
+  width: 100%;
+  font-size: 0.875rem;
+}
+
+.upload-tab__picker-label {
+  font-weight: 600;
+  color: var(--text-heading);
+}
+
+.upload-tab__picker-name {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  word-break: break-word;
+}
+
+.upload-tab__picker-size {
+  font-size: 0.8125rem;
+  color: var(--accent);
+}
+
+.upload-tab__success {
+  margin: 0;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.875rem;
+  color: #166534;
+  background: rgba(22, 101, 52, 0.1);
+  border: 1px solid rgba(22, 101, 52, 0.2);
+  border-radius: 0.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .upload-tab__success {
+    color: #86efac;
+    background: rgba(134, 239, 172, 0.1);
+    border-color: rgba(134, 239, 172, 0.25);
+  }
+}
+
+.upload-tab__list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.upload-tab__list-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text-heading);
+}
+
+.upload-tab__refresh {
+  width: auto;
+  min-width: auto;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.8125rem;
+}
+
+.upload-tab__empty {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.upload-tab__files {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+  max-height: 16rem;
+  overflow-y: auto;
+}
+
+.upload-tab__file {
+  padding: 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+}
+
+.upload-tab__file-name {
+  display: block;
+  font-weight: 500;
+  color: var(--text-heading);
+  word-break: break-word;
+}
+
+.upload-tab__file-meta {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .welcome__card {
     animation: none;

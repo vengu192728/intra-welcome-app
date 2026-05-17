@@ -7,13 +7,22 @@ export default defineConfig(({ mode }) => {
   const base = env.VITE_BASE_PATH || '/'
 
   const authProxyTarget = env.VITE_AUTH_PROXY_TARGET || 'http://localhost:9091'
+  const filesProxyTarget = env.VITE_FILES_PROXY_TARGET || 'http://localhost:9092'
 
   return {
     plugins: [react()],
     base,
     server: {
       proxy: {
-        '/api': {
+        '/api/auth': {
+          target: authProxyTarget,
+          changeOrigin: true,
+        },
+        '/api/files': {
+          target: filesProxyTarget,
+          changeOrigin: true,
+        },
+        '/api/health': {
           target: authProxyTarget,
           changeOrigin: true,
         },

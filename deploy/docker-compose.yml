@@ -1,8 +1,6 @@
-# Full intranet stack (welcome + authenticator).
+# Full intranet stack (welcome + authenticator + file upload).
 # Run from this directory:
 #   docker compose up -d --build
-#
-# Or use the shared compose at ../../deploy/docker-compose.yml
 
 services:
   intra-authenticator:
@@ -17,12 +15,35 @@ services:
       AUTH_CREDENTIALS_FILE: /config/credentials.txt
     volumes:
       - /opt/intranet/config:/config:ro
-    expose:
-      - "9091"
+    networks:
+      - intranet
     ports:
       - "${AUTH_PORT:-9091}:9091"
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://127.0.0.1:9091/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+
+  intra-file-upload:
+    build:
+      context: ../../intra-file-upload
+      dockerfile: deploy/Dockerfile
+    image: intra-file-upload:latest
+    container_name: intra-file-upload
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      UPLOAD_STORAGE_PATH: /uploads
+    volumes:
+      - /opt/intranet/uploads:/uploads
+    networks:
+      - intranet
+    ports:
+      - "${FILES_PORT:-9092}:9092"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:9092/api/files/health"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -43,9 +64,17 @@ services:
     depends_on:
       intra-authenticator:
         condition: service_healthy
+      intra-file-upload:
+        condition: service_healthy
+    networks:
+      - intranet
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]
       interval: 30s
       timeout: 5s
       retries: 3
       start_period: 10s
+
+networks:
+  intranet:
+    name: intranet
