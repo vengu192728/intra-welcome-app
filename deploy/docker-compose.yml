@@ -16,7 +16,7 @@ services:
       SPRING_PROFILES_ACTIVE: docker
       AUTH_CREDENTIALS_FILE: /config/credentials.txt
     volumes:
-      - ${CREDENTIALS_DIR:-../../deploy/config}:/config:ro
+      - /opt/intranet/config:/config:ro
     expose:
       - "9091"
     ports:
