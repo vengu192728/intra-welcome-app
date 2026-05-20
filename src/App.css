@@ -341,10 +341,18 @@
 }
 
 .upload-tab__file {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
   padding: 0.75rem;
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 0.5rem;
+}
+
+.upload-tab__file-details {
+  min-width: 0;
 }
 
 .upload-tab__file-name {
@@ -359,6 +367,13 @@
   margin-top: 0.25rem;
   font-size: 0.75rem;
   color: var(--text-muted);
+}
+
+.upload-tab__download {
+  flex: 0 0 auto;
+  min-width: 6.75rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.8125rem;
 }
 
 .storage-tab {

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { listUploadedFiles, uploadFile, validateFile } from '../api/files'
+import { downloadUploadedFile, listUploadedFiles, uploadFile, validateFile } from '../api/files'
 
 const ACCEPT_TYPES =
   'image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.zip,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document'
@@ -24,6 +24,7 @@ export default function FileUploadTab() {
   const [files, setFiles] = useState([])
   const [loadingList, setLoadingList] = useState(true)
   const [uploading, setUploading] = useState(false)
+  const [downloadingFileId, setDownloadingFileId] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
@@ -85,6 +86,19 @@ export default function FileUploadTab() {
       setError(err.message || 'Upload failed')
     } finally {
       setUploading(false)
+    }
+  }
+
+  async function handleDownload(file) {
+    setError('')
+    setSuccess('')
+    setDownloadingFileId(file.id)
+    try {
+      await downloadUploadedFile(file)
+    } catch (err) {
+      setError(err.message || 'Download failed')
+    } finally {
+      setDownloadingFileId('')
     }
   }
 
@@ -152,10 +166,20 @@ export default function FileUploadTab() {
           <ul className="upload-tab__files">
             {files.map((file) => (
               <li key={file.id} className="upload-tab__file">
-                <span className="upload-tab__file-name">{file.originalName}</span>
-                <span className="upload-tab__file-meta">
-                  {formatSize(file.size)} · {file.uploadedBy} · {formatDate(file.uploadedAt)}
-                </span>
+                <div className="upload-tab__file-details">
+                  <span className="upload-tab__file-name">{file.originalName}</span>
+                  <span className="upload-tab__file-meta">
+                    {formatSize(file.size)} · {file.uploadedBy} · {formatDate(file.uploadedAt)}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  className="welcome__button welcome__button--secondary upload-tab__download"
+                  onClick={() => handleDownload(file)}
+                  disabled={downloadingFileId === file.id}
+                >
+                  {downloadingFileId === file.id ? 'Downloading…' : 'Download'}
+                </button>
               </li>
             ))}
           </ul>

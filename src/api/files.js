@@ -58,6 +58,26 @@ export async function listUploadedFiles() {
   return data.files ?? []
 }
 
+export async function downloadUploadedFile(file) {
+  const response = await fetch(`${API_BASE}/api/files/${encodeURIComponent(file.id)}/download`, {
+    headers: adminHeaders(),
+  })
+
+  if (!response.ok) {
+    throw new Error(response.status === 404 ? 'File not found' : 'Download failed')
+  }
+
+  const blob = await response.blob()
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = file.originalName || 'download'
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
+  URL.revokeObjectURL(url)
+}
+
 export async function fetchDiskSpace() {
   const response = await fetch(`${API_BASE}/api/files/disk-space`, {
     headers: adminHeaders(),
