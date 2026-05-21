@@ -1,4 +1,4 @@
-# Full intranet stack (welcome + authenticator + file upload).
+# Full intranet stack (welcome + authenticator + file upload + calorie tracker).
 # Run from this directory:
 #   docker compose up -d --build
 
@@ -49,6 +49,26 @@ services:
       retries: 3
       start_period: 40s
 
+  intra-calorie-tracker:
+    build:
+      context: ../../intra-calorie-tracker
+      dockerfile: deploy/Dockerfile
+    image: intra-calorie-tracker:latest
+    container_name: intra-calorie-tracker
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    networks:
+      - intranet
+    ports:
+      - "${CALORIES_PORT:-9093}:9093"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:9093/api/calories/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+
   intra-welcome:
     build:
       context: ..
@@ -65,6 +85,8 @@ services:
       intra-authenticator:
         condition: service_healthy
       intra-file-upload:
+        condition: service_healthy
+      intra-calorie-tracker:
         condition: service_healthy
     networks:
       - intranet

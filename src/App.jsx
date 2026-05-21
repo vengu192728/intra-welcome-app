@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { login } from './api/auth'
 import { clearSession, getSession, saveSession } from './lib/session'
+import CalorieTrackerTab from './components/CalorieTrackerTab'
 import FileUploadTab from './components/FileUploadTab'
 import StorageTab from './components/StorageTab'
 import './App.css'
@@ -62,8 +63,7 @@ function App() {
               {session.role}
             </p>
 
-            {isAdmin ? (
-              <nav className="welcome__tabs" aria-label="Main navigation">
+            <nav className="welcome__tabs" aria-label="Main navigation">
                 <button
                   type="button"
                   className={`welcome__tab${activeTab === 'home' ? ' welcome__tab--active' : ''}`}
@@ -71,27 +71,39 @@ function App() {
                 >
                   Home
                 </button>
-                <button
-                  type="button"
-                  className={`welcome__tab${activeTab === 'upload' ? ' welcome__tab--active' : ''}`}
-                  onClick={() => setActiveTab('upload')}
-                >
-                  File upload
-                </button>
-                <button
-                  type="button"
-                  className={`welcome__tab${activeTab === 'storage' ? ' welcome__tab--active' : ''}`}
-                  onClick={() => setActiveTab('storage')}
-                >
-                  Storage
-                </button>
-              </nav>
-            ) : null}
+              <button
+                type="button"
+                className={`welcome__tab${activeTab === 'calories' ? ' welcome__tab--active' : ''}`}
+                onClick={() => setActiveTab('calories')}
+              >
+                Calories
+              </button>
+              {isAdmin ? (
+                <>
+                  <button
+                    type="button"
+                    className={`welcome__tab${activeTab === 'upload' ? ' welcome__tab--active' : ''}`}
+                    onClick={() => setActiveTab('upload')}
+                  >
+                    File upload
+                  </button>
+                  <button
+                    type="button"
+                    className={`welcome__tab${activeTab === 'storage' ? ' welcome__tab--active' : ''}`}
+                    onClick={() => setActiveTab('storage')}
+                  >
+                    Storage
+                  </button>
+                </>
+              ) : null}
+            </nav>
 
             {activeTab === 'upload' && isAdmin ? (
               <FileUploadTab />
             ) : activeTab === 'storage' && isAdmin ? (
               <StorageTab />
+            ) : activeTab === 'calories' ? (
+              <CalorieTrackerTab />
             ) : (
               <>
                 <h1 id="welcome-heading" className="welcome__title">

@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => {
 
   const authProxyTarget = env.VITE_AUTH_PROXY_TARGET || 'http://localhost:9091'
   const filesProxyTarget = env.VITE_FILES_PROXY_TARGET || 'http://localhost:9092'
+  const caloriesProxyTarget = env.VITE_CALORIES_PROXY_TARGET || 'http://localhost:9093'
 
   return {
     plugins: [react()],
@@ -20,6 +21,10 @@ export default defineConfig(({ mode }) => {
         },
         '/api/files': {
           target: filesProxyTarget,
+          changeOrigin: true,
+        },
+        '/api/calories': {
+          target: caloriesProxyTarget,
           changeOrigin: true,
         },
         '/api/health': {
